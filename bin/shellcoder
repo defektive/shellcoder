@@ -23,12 +23,12 @@ xord_opcodes = opcodes.map do |code|
 end
 
 # empty val so join works properly
-opcodes.unshift ''
 
 puts 'Raw shellcode'
-puts opcodes.join('\x')
+puts opcodes.map { |opcode| "\\x#{opcode}" }.join('')
+puts opcodes.map { |opcode| "0x#{opcode}" }.join(',')
 
-xord_opcodes.unshift ''
 puts ''
 puts "XOR Encoded: #{'%02x' % xor_encoder} (#{xor_encoder})"
-puts xord_opcodes.join('\x')
+puts xord_opcodes.map { |opcode| "\\x#{opcode}" }.join('')
+puts xord_opcodes.map { |opcode| "0x#{opcode}" }.join(',')
