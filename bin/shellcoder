@@ -24,6 +24,7 @@ end
 
 # empty val so join works properly
 
+puts "Length: #{opcodes.length}"
 puts 'Raw shellcode'
 puts opcodes.map { |opcode| "\\x#{opcode}" }.join('')
 puts opcodes.map { |opcode| "0x#{opcode}" }.join(',')
