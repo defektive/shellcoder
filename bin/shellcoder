@@ -1,0 +1,34 @@
+#! /usr/bin/env ruby
+
+binary = ARGV[0]
+puts "Shell(en)coding... #{binary}"
+
+shellcode = `objdump -d #{binary} \
+  | grep '[0-9a-f]:' \
+  | grep -v 'file' \
+  | cut -f2 -d: \
+  | cut -f1-6 -d' ' \
+  | tr -s ' ' \
+  | tr '\t' ' ' \
+  | sed 's/ $//g' \
+  | paste -d '' -s`
+
+opcodes = shellcode.split(' ')
+compacted_codes = opcodes.compact
+
+xor_encoder = 255
+xor_encoder -= 1 while compacted_codes.include? xor_encoder.to_s(16)
+xord_opcodes = opcodes.map do |code|
+  '%02x' % (code.to_i(16) ^ xor_encoder)
+end
+
+# empty val so join works properly
+opcodes.unshift ''
+
+puts 'Raw shellcode'
+puts opcodes.join('\x')
+
+xord_opcodes.unshift ''
+puts ''
+puts "XOR Encoded: #{'%02x' % xor_encoder} (#{xor_encoder})"
+puts xord_opcodes.join('\x')
